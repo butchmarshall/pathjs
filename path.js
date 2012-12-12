@@ -128,7 +128,7 @@ var Path = {
     'core': {
         'route': function (path) {
             this.path = path;
-            this.action = null;
+            this.actions = [];
             this.do_enter = [];
             this.do_exit = null;
             this.params = {};
@@ -145,7 +145,7 @@ var Path = {
 };
 Path.core.route.prototype = {
     'to': function (fn) {
-        this.action = fn;
+        this.actions.push(fn);
         return this;
     },
     'enter': function (fns) {
@@ -186,7 +186,9 @@ Path.core.route.prototype = {
             }
         }
         if (!halt_execution) {
-            Path.routes.defined[this.path].action();
+            for(var i = 0; i < Path.routes.defined[this.path].actions.length; i++) {
+                Path.routes.defined[this.path].actions[i].call(this);
+            }
         }
     }
 };
